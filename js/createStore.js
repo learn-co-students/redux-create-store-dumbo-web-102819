@@ -1,4 +1,4 @@
-let state;
+// create store object with a method dispatch
 
 function reducer(state = { count: 0 }, action) {
   switch (action.type) {
@@ -10,19 +10,34 @@ function reducer(state = { count: 0 }, action) {
   }
 };
 
-function dispatch(action){
-  state = reducer(state, action);
-  render();
-};
+function creatStore(reducer) {
+  let state;
+
+  function dispatch(action){
+    state = reducer(state, action);
+    render();
+  };
+
+  function getState() {
+    return state;
+  }
+
+  return { 
+    dispatch,
+    getState
+   }
+}
+
+let store = creatStore(reducer);
+store.dispatch({ type: 'INCREASE_COUNT' });
 
 function render() {
   let container = document.getElementById('container');
-  container.textContent = state.count;
+  container.textContent = store.getState().count;
 };
 
-dispatch({ type: '@@INIT' })
 let button = document.getElementById('button');
 
 button.addEventListener('click', function() {
-    dispatch({ type: 'INCREASE_COUNT' });
-})
+    store.dispatch({ type: 'INCREASE_COUNT' });
+});
